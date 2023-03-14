@@ -25,6 +25,7 @@ app.use(errorHandler)
 import productRoute from './routes/product.route.js'
 import categoryRoute from './routes/category.route.js'
 import userRoute from './routes/user.route.js'
+import orderRoute from './routes/order.route.js'
 
 mongoose.connect(process.env.MONGO,{
     useNewUrlParser: true,
@@ -41,6 +42,7 @@ mongoose.connect(process.env.MONGO,{
 app.use(`${api}/product`,productRoute)
 app.use(`${api}/categories`,categoryRoute)
 app.use(`${api}/user`,userRoute)
+app.use(`${api}/orders`,orderRoute)
 
 app.listen(3000, ()=>{
     console.log("server is runing http://localhost:3000")
