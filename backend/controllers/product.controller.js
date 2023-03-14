@@ -102,3 +102,14 @@ export const getFeatureProductCount = async (req, res) =>{
     }
     res.status(200).send(products)
 }
+
+export const getUserCount = async (req, res) =>{
+    const productCount = await productModel.countDocuments({ "_id": { "$exists": true }})
+
+    if(!productCount) {
+        res.status(500).json({success: false})
+    } 
+    res.send({
+        productCount: productCount
+    });
+}

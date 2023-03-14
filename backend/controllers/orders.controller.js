@@ -26,7 +26,7 @@ export const getbyidOrder = async (req, res) =>{
 export const createOrder = async (req,res)=>{
 const orderItemsIds =  Promise.all(req.body.orderItems.map(async orderitem =>{
     let newOrderItem = new orderItemModel({
-        quanlity: orderitem.quanlity,
+        quantity: orderitem.quantity,
         product: orderitem.product
     })
     newOrderItem = await newOrderItem.save()
@@ -37,7 +37,7 @@ const orderItemsIds =  Promise.all(req.body.orderItems.map(async orderitem =>{
     const orderItemsIdsResolved = await orderItemsIds
     const totalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemsId) =>{
         const orderItem = await orderItemModel.findById(orderItemsId).populate('product', 'price')
-        const totalPrice = orderItem.product.price * orderItem.quanlity
+        const totalPrice = orderItem.product.price * orderItem.quantity
         return totalPrice;
     }))
 

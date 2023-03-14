@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const orderItemSchema = mongoose.Schema({
-    quanlity:{
+    quantity:{
         type: Number,
         required: true
     },
