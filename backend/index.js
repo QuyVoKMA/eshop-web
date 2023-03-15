@@ -8,6 +8,8 @@ dotenv.config();
 import cors from 'cors';
 import authJwt from './helpers/jwt.js'
 import errorHandler from './helpers/error-handler.js'
+import path from 'path'
+const __dirname = path.resolve()
 
 
 
@@ -19,6 +21,7 @@ app.options('*', cors())
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(authJwt())
+app.use('/public/uploads', express.static(path.join(__dirname + '/public/uploads')));
 app.use(errorHandler)
 
 
