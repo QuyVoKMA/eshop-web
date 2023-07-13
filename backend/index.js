@@ -1,51 +1,57 @@
 import express from 'express';
 const app =express();
-import bodyParser from 'body-parser';
-import morgan from 'morgan';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 dotenv.config();
 import cors from 'cors';
-import authJwt from './helpers/jwt.js'
-import errorHandler from './helpers/error-handler.js'
+import compression from 'compression';
 import path from 'path'
-const __dirname = path.resolve()
+import helmet from 'helmet' 
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser'
+import keys from './config/keys.js';
+import  setupDB  from './utils/db.js';
+// import socket from './socket'
 
-
-
-const api = process.env.API_URL
-
-app.use(cors())
+app.use(cors()) 
 app.options('*', cors())
-//midleware;
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(morgan('tiny'));
-app.use(authJwt())
-app.use('/public/uploads', express.static(path.join(__dirname + '/public/uploads')));
-app.use(errorHandler)
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
+app.use(helmet({contentSecurityPolicy: false,
+frameguard: true}))
+
+setupDB()
 
 
-import productRoute from './routes/product.route.js'
-import categoryRoute from './routes/category.route.js'
-import userRoute from './routes/user.route.js'
-import orderRoute from './routes/order.route.js'
+import userRoute from './routes/user.js'
+import authRoute from './routes/auth.js'
+import merchantRoute from './routes/merchant.js'
+import wishlistRoute from './routes/wishlist.js'
+import addressRoute from './routes/address.js'
+import brandRoute from './routes/brand.js'
+import cartRoute from './routes/cart.js'
+import categoryRoute from './routes/category.js'
+import contactRoute from './routes/contact.js'
+import orderRoute from './routes/order.js'
+import productRoute from './routes/product.js'
+import reviewRoute from './routes/review.js'
 
-mongoose.connect(process.env.MONGO,{
-    useNewUrlParser: true,
-    useUnifiedTopology:true
-})
-.then(()=>{
-    console.log('Database Connection is ready...')
-})
-.catch((err) =>{
-    console.log("Connect db err", err)
-})
 
-// routes
-app.use(`${api}/product`,productRoute)
-app.use(`${api}/categories`,categoryRoute)
-app.use(`${api}/user`,userRoute)
-app.use(`${api}/orders`,orderRoute)
+app.use('/auth',authRoute)
+app.use('/user',userRoute)
+app.use('/merchant',merchantRoute)
+app.use('/wishlist',wishlistRoute)
+app.use('/address',addressRoute)
+app.use('/brand',brandRoute)
+app.use('/cart',cartRoute)
+app.use('/category',categoryRoute)
+app.use('/contact',contactRoute)
+app.use('/order',orderRoute)
+app.use('/product',productRoute)
+app.use('/review',reviewRoute)
+
+
 
 app.listen(3000, ()=>{
     console.log("server is runing http://localhost:3000")
